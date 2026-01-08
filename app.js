@@ -1,4 +1,4 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwEfq9lqxIQm481wdu5LpPii0ZEAXavmlSikPYmtr9_JFFtYGAEO0QU3K0ZweDJZKBr/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzBhJ8jwXNvEPUAsBw7ALdJou0bW3xoO71gCuxIOJNSwjv0F7bntNclG0FcI_6TcAUz/exec";
 
 function esc(s) {
   return (s ?? "").toString().replaceAll('"', "&quot;");
