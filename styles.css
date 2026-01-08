@@ -12,19 +12,32 @@ body {
   line-height: 1.6;
 }
 
-/* Top bar */
+/* Top bar fija */
 .top-bar {
   background: #059669;
   color: white;
   padding: 0.5rem 0;
   font-size: 0.9rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .top-bar-content {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 2rem;
   flex-wrap: wrap;
+}
+
+.contact-label {
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .contact-link {
@@ -39,6 +52,7 @@ body {
 .contact-link:hover {
   opacity: 0.8;
 }
+
 
 /* Header */
 .site-header {
