@@ -59,6 +59,7 @@ body {
   background: linear-gradient(90deg, #10b981 0%, #059669 100%);
   padding: 1.5rem 0;
   box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+  margin-top: 45px; /* AGREGAR ESTA LÍNEA */
 }
 
 .header-row {
@@ -431,4 +432,18 @@ body {
   .compromiso {
     font-size: 1rem;
   }
+    .top-bar-content {
+    justify-content: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .contact-label {
+    font-size: 0.9rem;
+  }
+  
+  .site-header {
+    margin-top: 45px;
+  }
 }
+
