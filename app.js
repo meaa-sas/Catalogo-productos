@@ -26,6 +26,8 @@ function getJSONP() {
   });
 }
 
+let productosGlobal = [];
+
 async function cargarProductos() {
   const status = document.getElementById("status");
   const count = document.getElementById("count");
@@ -33,29 +35,15 @@ async function cargarProductos() {
   try {
     status.textContent = "Conectando con Google Sheets...";
     const payload = await getJSONP();
-    const productos = payload.data || [];
+    productosGlobal = payload.data || [];
 
-    const cont = document.querySelector("#productos");
-    cont.innerHTML = productos.map(p => {
-      const search = `${p.codigo} ${p.nombre} ${p.descripcion} ${p.categoria}`.toLowerCase();
-      return `
-        <article class="card" data-search="${esc(search)}" data-categoria="${esc(p.categoria)}">
-          <img src="${p.imagen || 'https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'}" alt="${esc(p.nombre)}" onerror="this.src='https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'">
-          <h3>${p.nombre || ''}</h3>
-          <small>${p.codigo || ''}${p.categoria ? " · " + p.categoria : ""}</small>
-          <p>${p.descripcion || ''}</p>
-          ${p.precio ? `<strong>${p.precio}</strong>` : ""}
-          ${p.stock ? `<small style="display:block;margin:0 12px 8px;color:rgba(231,238,252,.75);">Stock: ${p.stock}</small>` : ""}
-          ${p.whatsapp ? `<a href="${p.whatsapp}" target="_blank" rel="noopener">Cotizar por WhatsApp</a>` : ""}
-        </article>
-      `;
-    }).join("");
+    renderizarProductos(productosGlobal);
 
-    count.textContent = `${productos.length} producto(s)`;
+    count.textContent = `${productosGlobal.length} producto(s)`;
     status.textContent = "";
 
     if (typeof window.__catalogo_ready === "function") {
-      window.__catalogo_ready(productos);
+      window.__catalogo_ready(productosGlobal);
     }
   } catch (err) {
     count.textContent = "0 producto(s)";
@@ -63,5 +51,55 @@ async function cargarProductos() {
     console.error("Error cargando productos:", err);
   }
 }
+
+function renderizarProductos(productos) {
+  const cont = document.querySelector("#productos");
+  cont.innerHTML = productos.map((p, index) => {
+    const search = `${p.codigo} ${p.nombre} ${p.descripcion} ${p.categoria}`.toLowerCase();
+    return `
+      <article class="card" data-search="${esc(search)}" data-categoria="${esc(p.categoria)}" onclick="mostrarDetalle(${index})">
+        <img src="${p.imagen || 'https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'}" alt="${esc(p.nombre)}" onerror="this.src='https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'">
+        <div class="card-content">
+          <h3>${p.nombre || ''}</h3>
+          <small>${p.codigo || ''} · ${p.categoria || ''}</small>
+          <div class="precio">${p.precio || ''}</div>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function mostrarDetalle(index) {
+  const p = productosGlobal[index];
+  const modal = document.getElementById("modal");
+  
+  document.getElementById("modal-image").src = p.imagen || 'https://via.placeholder.com/600x400/1a2332/34d399?text=Sin+imagen';
+  document.getElementById("modal-nombre").textContent = p.nombre || '';
+  document.getElementById("modal-codigo").textContent = `${p.codigo || ''} · ${p.categoria || ''}`;
+  document.getElementById("modal-precio").textContent = p.precio || '';
+  document.getElementById("modal-descripcion").textContent = p.descripcion || '';
+  
+  const whatsappBtn = document.getElementById("modal-whatsapp");
+  if (p.whatsapp) {
+    whatsappBtn.href = p.whatsapp;
+    whatsappBtn.style.display = 'inline-block';
+  } else {
+    whatsappBtn.style.display = 'none';
+  }
+  
+  modal.classList.add('active');
+}
+
+function cerrarModal() {
+  document.getElementById("modal").classList.remove('active');
+}
+
+// Cerrar modal al hacer clic fuera
+document.addEventListener('click', (e) => {
+  const modal = document.getElementById("modal");
+  if (e.target === modal) {
+    cerrarModal();
+  }
+});
 
 cargarProductos();
