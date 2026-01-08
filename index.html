@@ -1,1 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MEAA S.A.S | Catálogo de productos</title>
+  <meta name="description" content="Catálogo de productos MEAA S.A.S" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <div>
+        <h1>MEAA S.A.S</h1>
+        <p class="subtitle">Catálogo de productos</p>
+      </div>
+      <div class="header-actions">
+        <input id="q" class="input" type="search" placeholder="Buscar por nombre, código o categoría..." />
+        <select id="cat" class="select">
+          <option value="">Todas las categorías</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="toolbar">
+      <div class="pill" id="count">Cargando productos…</div>
+      <div class="pill subtle" id="status"></div>
+    </section>
+
+    <section id="productos" class="grid"></section>
+
+    <section class="note">
+      <h2>Información</h2>
+      <ul>
+        <li>Los productos se cargan automáticamente desde Google Sheets.</li>
+        <li>Si falta la imagen, se mostrará un marcador por defecto.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <small>© <span id="year"></span> MEAA S.A.S</small>
+      <small class="muted">Hecho con GitHub Pages</small>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Tu lógica de carga desde Sheets -->
+  <script src="app.js" defer></script>
+
+  <!-- Filtro simple (no toca tu API; filtra tarjetas ya pintadas) -->
+  <script>
+    const q = document.getElementById("q");
+    const cat = document.getElementById("cat");
+    const count = document.getElementById("count");
+    const status = document.getElementById("status");
+
+    function normalizar(s){ return (s||"").toString().toLowerCase().trim(); }
+
+    function aplicarFiltros() {
+      const query = normalizar(q.value);
+      const categoria = normalizar(cat.value);
+      const cards = [...document.querySelectorAll(".card")];
+
+      let visibles = 0;
+      cards.forEach(card => {
+        const text = normalizar(card.getAttribute("data-search"));
+        const catCard = normalizar(card.getAttribute("data-categoria"));
+        const okQ = !query || text.includes(query);
+        const okC = !categoria || catCard === categoria;
+        const show = okQ && okC;
+        card.style.display = show ? "" : "none";
+        if (show) visibles++;
+      });
+
+      count.textContent = `${visibles} producto(s)`;
+      status.textContent = (query || categoria) ? "Filtro aplicado" : "";
+    }
+
+    q.addEventListener("input", aplicarFiltros);
+    cat.addEventListener("change", aplicarFiltros);
+
+    // Hook: cuando app.js termine de pintar, llena categorías y activa filtros.
+    window.__catalogo_ready = function(productos) {
+      const cats = [...new Set((productos||[]).map(p => (p.categoria||"").trim()).filter(Boolean))].sort();
+      cat.innerHTML = `<option value="">Todas las categorías</option>` + cats.map(c => `<option value="${c}">${c}</option>`).join("");
+      aplicarFiltros();
+    };
+  </script>
+</body>
+</html>
 
