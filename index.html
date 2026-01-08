@@ -55,15 +55,6 @@
     </section>
 
     <section id="productos" class="grid"></section>
-
-    <section class="note">
-      <h2>Información</h2>
-      <ul>
-        <li>Los productos se cargan automáticamente desde Google Sheets.</li>
-        <li>Si falta la imagen, se mostrará un marcador por defecto.</li>
-        <li>Para consultas y cotizaciones, contáctenos vía WhatsApp o correo electrónico.</li>
-      </ul>
-    </section>
   </main>
 
   <footer class="site-footer">
@@ -86,7 +77,7 @@
 
   <script src="app.js" defer></script>
 
-  <script>
+ <script>
     const q = document.getElementById("q");
     const cat = document.getElementById("cat");
     const count = document.getElementById("count");
@@ -123,22 +114,24 @@
       aplicarFiltros();
     };
   </script>
+
+
   <!-- Modal de detalle -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <button class="modal-close" onclick="cerrarModal()">&times;</button>
-    <div class="modal-body">
-      <img id="modal-image" class="modal-image" alt="Producto">
-      <div class="modal-details">
-        <h2 id="modal-nombre"></h2>
-        <div class="codigo" id="modal-codigo"></div>
-        <div class="precio-grande" id="modal-precio"></div>
-        <p class="descripcion" id="modal-descripcion"></p>
-        <a id="modal-whatsapp" class="whatsapp-btn" target="_blank">📱 Cotizar por WhatsApp</a>
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="cerrarModal()">&times;</button>
+      <div class="modal-body">
+        <img id="modal-image" class="modal-image" alt="Producto">
+        <div class="modal-details">
+          <h2 id="modal-nombre"></h2>
+          <div class="codigo" id="modal-codigo"></div>
+          <div class="precio-grande" id="modal-precio"></div>
+          <p class="descripcion" id="modal-descripcion"></p>
+          <a id="modal-whatsapp" class="whatsapp-btn" target="_blank">📱 Cotizar por WhatsApp</a>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 </body>
 </html>
