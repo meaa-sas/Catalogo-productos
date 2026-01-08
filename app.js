@@ -40,7 +40,7 @@ async function cargarProductos() {
       const search = `${p.codigo} ${p.nombre} ${p.descripcion} ${p.categoria}`.toLowerCase();
       return `
         <article class="card" data-search="${esc(search)}" data-categoria="${esc(p.categoria)}">
-          <img src="${p.imagen_url || 'https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'}" alt="${esc(p.nombre)}" onerror="this.src='https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'">
+          <img src="${p.imagen || 'https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'}" alt="${esc(p.nombre)}" onerror="this.src='https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'">
           <h3>${p.nombre || ''}</h3>
           <small>${p.codigo || ''}${p.categoria ? " · " + p.categoria : ""}</small>
           <p>${p.descripcion || ''}</p>
