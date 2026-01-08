@@ -30,24 +30,20 @@ let productosGlobal = [];
 
 async function cargarProductos() {
   const status = document.getElementById("status");
-  const count = document.getElementById("count");
 
   try {
-    status.textContent = "Conectando con Google Sheets...";
+    status.textContent = "Cargando...";
     const payload = await getJSONP();
     productosGlobal = payload.data || [];
 
     renderizarProductos(productosGlobal);
-
-    count.textContent = `${productosGlobal.length} producto(s)`;
     status.textContent = "";
 
     if (typeof window.__catalogo_ready === "function") {
       window.__catalogo_ready(productosGlobal);
     }
   } catch (err) {
-    count.textContent = "0 producto(s)";
-    status.textContent = "❌ Error: No se pudo cargar.";
+    status.textContent = "❌ Error al cargar productos";
     console.error("Error cargando productos:", err);
   }
 }
@@ -61,7 +57,7 @@ function renderizarProductos(productos) {
         <img src="${p.imagen || 'https://via.placeholder.com/400x300/1a2332/34d399?text=Sin+imagen'}" alt="${esc(p.nombre)}" onerror="this.src='https://via.placeholder.com/400x300/1a2332/34d399?text=Sin+imagen'">
         <div class="card-content">
           <h3>${p.nombre || ''}</h3>
-          <small>${p.codigo || ''} · ${p.categoria || ''}</small>
+          <small>${p.categoria || ''}</small>
           <strong>${p.precio || ''}</strong>
         </div>
       </article>
@@ -88,15 +84,14 @@ function mostrarDetalle(index) {
   }
   
   modal.classList.add('active');
-  document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+  document.body.style.overflow = 'hidden';
 }
 
 function cerrarModal() {
   document.getElementById("modal").classList.remove('active');
-  document.body.style.overflow = ''; // Restaurar scroll
+  document.body.style.overflow = '';
 }
 
-// Cerrar modal al hacer clic fuera
 document.addEventListener('click', (e) => {
   const modal = document.getElementById("modal");
   if (e.target === modal) {
@@ -104,7 +99,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Cerrar modal con tecla ESC
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     cerrarModal();
