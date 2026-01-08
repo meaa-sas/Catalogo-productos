@@ -47,7 +47,7 @@ async function cargarProductos() {
     }
   } catch (err) {
     count.textContent = "0 producto(s)";
-    status.textContent = "❌ Error: No se pudo cargar. Verifica la URL del Web App.";
+    status.textContent = "❌ Error: No se pudo cargar.";
     console.error("Error cargando productos:", err);
   }
 }
@@ -58,11 +58,11 @@ function renderizarProductos(productos) {
     const search = `${p.codigo} ${p.nombre} ${p.descripcion} ${p.categoria}`.toLowerCase();
     return `
       <article class="card" data-search="${esc(search)}" data-categoria="${esc(p.categoria)}" onclick="mostrarDetalle(${index})">
-        <img src="${p.imagen || 'https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'}" alt="${esc(p.nombre)}" onerror="this.src='https://via.placeholder.com/400x200/1a2332/34d399?text=Sin+imagen'">
+        <img src="${p.imagen || 'https://via.placeholder.com/400x300/1a2332/34d399?text=Sin+imagen'}" alt="${esc(p.nombre)}" onerror="this.src='https://via.placeholder.com/400x300/1a2332/34d399?text=Sin+imagen'">
         <div class="card-content">
           <h3>${p.nombre || ''}</h3>
           <small>${p.codigo || ''} · ${p.categoria || ''}</small>
-          <div class="precio">${p.precio || ''}</div>
+          <strong>${p.precio || ''}</strong>
         </div>
       </article>
     `;
@@ -77,7 +77,7 @@ function mostrarDetalle(index) {
   document.getElementById("modal-nombre").textContent = p.nombre || '';
   document.getElementById("modal-codigo").textContent = `${p.codigo || ''} · ${p.categoria || ''}`;
   document.getElementById("modal-precio").textContent = p.precio || '';
-  document.getElementById("modal-descripcion").textContent = p.descripcion || '';
+  document.getElementById("modal-descripcion").textContent = p.descripcion || 'Sin descripción disponible';
   
   const whatsappBtn = document.getElementById("modal-whatsapp");
   if (p.whatsapp) {
@@ -88,16 +88,25 @@ function mostrarDetalle(index) {
   }
   
   modal.classList.add('active');
+  document.body.style.overflow = 'hidden'; // Prevenir scroll del body
 }
 
 function cerrarModal() {
   document.getElementById("modal").classList.remove('active');
+  document.body.style.overflow = ''; // Restaurar scroll
 }
 
 // Cerrar modal al hacer clic fuera
 document.addEventListener('click', (e) => {
   const modal = document.getElementById("modal");
   if (e.target === modal) {
+    cerrarModal();
+  }
+});
+
+// Cerrar modal con tecla ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
     cerrarModal();
   }
 });
